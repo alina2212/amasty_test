@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Алина Пицца</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+
+<div class="order-pizza">
+    <label for="pizza">Пицца:</label>
+    <select name="pizza" id="pizza">
+        <option>--выберите пиццу</option>
+        <option value="gai">Гавайская</option>
+        <option value="pep">Пепперони</option>
+        <option value="der">Деревенская</option>
+        <option value="mas">Грибная</option>
+    </select>
+    <br/>
+    <label for="size">Размер:</label>
+    <select name="size" id="size">
+        <option>--выберите размер</option>
+        <option value="21|150">21</option>
+        <option value="26|250">26</option>
+        <option value="31|350">31</option>
+        <option value="45|450">45</option>
+    </select>
+    <br/>
+    <label for="cream">Соус:</label>
+    <select name="cream" id="cream">
+        <option>--выберите соус</option>
+        <option value="chease">сырный</option>
+        <option value="sweet">кисло-сладкий</option>
+        <option value="garlic">чесночный</option>
+        <option value="barbecue">барбекю</option>
+    </select>
+    <br/>
+    <label class="price-label">Цена: <span class="price">0</span></label>
+    <button class="button">Заказать</button>
+</div>
+
+<div class="check">
+    <h2>Спасибо за покупку</h2>
+    <h3>Ваш заказ:</h3>
+    <table>
+        <tr>
+            <td>Пицца:</td>
+            <td id="check-pizza"></td>
+        </tr>
+        <tr>
+            <td>Размер:</td>
+            <td id="check-size"></td>
+        </tr>
+        <tr>
+            <td>Соус:</td>
+            <td id="check-souce"></td>
+        </tr>
+        <tr>
+            <td>Цена:</td>
+            <td id="check-price"></td>
+        </tr>
+    </table>
+</div>
+
+<style>
+    .order-pizza {
+        padding: 20px;
+        border: 1px solid lightgray;
+        display: inline-block;
+    }
+    #pizza, #size, #cream {
+        margin: 10px;
+    }
+    .order-pizza .button{
+        margin-top: 20px;
+        background-color: #a6d6ec;
+        border: 2px solid #a6d6ec;
+        padding: 7px;
+        font-size: 21px;
+        width: 100%;
+        cursor: pointer;
+    }
+    .order-pizza .button:hover{
+        background-color: #83cff3;
+        border: 2px solid #7c7ce2;
+    }
+    .check {
+        display: none;
+        width: 300px;
+        text-align: center;
+        border: 1px solid lightgray;
+        margin: 22px;
+    }
+    .check table {
+        margin: 0 auto;
+    }
+</style>
+
+<script>
+    jQuery('#size').on('change', function() {
+        var selectedOption = jQuery('#size').val();
+        var price = selectedOption.split('|')[1];
+
+        jQuery('.price').text(price);
+    })
+
+    jQuery('.button').on('click', function() {
+        var pizza = jQuery('#pizza').select().val();
+        var size = jQuery('#size').select().val();
+        var cream = jQuery('#cream').select().val();
+
+        jQuery.ajax({
+            method: "POST",
+            url: 'action.php',
+            data: {
+                pizza: pizza,
+                size: size,
+                cream: cream
+            }
+        }).done(function( data ) {
+            var check = JSON.parse(data);
+
+            jQuery('#check-pizza').text(check.pizza);
+            jQuery('#check-size').text(check.size);
+            jQuery('#check-souce').text(check.cream);
+            jQuery('#check-price').text(check.price);
+            jQuery('.check').show();
+        });
+    })
+</script>
+</body>
+</html>
